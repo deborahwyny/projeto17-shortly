@@ -1,6 +1,7 @@
 import express, { Router } from "express"
 import cors from "cors"
 import dotenv from "dotenv"
+import router from "./routes/index.router.js"
 
 
 //// configs
@@ -9,7 +10,7 @@ app.use(cors())
 app.use(express.json())
 dotenv.config()
 
-// app.use(router)
+app.use(router)
 
 
 
