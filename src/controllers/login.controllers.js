@@ -33,7 +33,7 @@ export async function loginUser (req, res){
         const verificadorUserSenha = await db.query('SELECT * FROM users WHERE email = $1 AND password = $2;',[email, password])
         if (verificadorUserSenha.rows.length === 0) { return res.status(401).send("Invalid email or password")}
 
-        const user = verificadorUserSenha.rows[0];
+        const user = verificadorUserSenha.rows[0]
 
         if (user.password !== password) {
         return res.status(401).send("Invalid email or password")}
