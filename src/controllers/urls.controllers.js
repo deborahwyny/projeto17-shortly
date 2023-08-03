@@ -38,10 +38,14 @@ export async function urlShorten(req, res){
 export async function getUrlId(req, res) {
 
     const {id} = req.params
-
     try {
 
-        const getUrl = await db.query('SELECT * FROM url')
+        const getUrl = await db.query('SELECT id, "shorturl", url FROM url WHERE id = $1;', [id]);
+        if (getUrl.rows.length === 0) {
+            return res.status(404).send("URL não existe");
+        }
+
+          res.status(200).send(getUrl.rows)
 
         
 

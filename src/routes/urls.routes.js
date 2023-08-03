@@ -7,7 +7,7 @@ import { getUrlId, urlShorten } from "../controllers/urls.controllers.js"
 const urlRouter = Router()
 
 urlRouter.post("/urls/shorten", validateSchemma(urlSchemma), urlShorten)
-urlRouter.get("/urls/:id", validateSchemma(urlSchemma), getUrlId)
+urlRouter.get("/urls/:id", getUrlId)
 
 
 export default urlRouter
