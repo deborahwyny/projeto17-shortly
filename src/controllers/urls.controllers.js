@@ -79,3 +79,12 @@ export async function openUrl(req, res){
 
     }
 }
+
+export async function deleteUrl(req, res) {
+
+    try {
+
+    } catch (err) {
+        res.status(500).send(err.message)
+    }
+}
