@@ -47,9 +47,34 @@ export async function getUrlId(req, res) {
 
           res.status(200).send(getUrl.rows)
 
-        
 
     } catch (err) {
+        res.status(500).send(err.message)
+
+    }
+}
+
+export async function openUrl(req, res){
+
+    const {shortUrl} = req.params
+
+    try {
+        
+        const verificarUrl = await db.query('SELECT * FROM url WHERE shortUrl = $1;', [shortUrl])
+
+        if (verificarUrl.rowCount === 0) {
+            return res.status(404).send("URL não existe")
+        }
+
+        const originalURL = verificarUrl.rows[0].url
+
+        await db.query('UPDATE url SET visitcount = visitcount + 1 WHERE shortUrl = $1;', [shortUrl]);
+
+        res.redirect(originalURL)
+
+
+
+    } catch(err) {
         res.status(500).send(err.message)
 
     }
