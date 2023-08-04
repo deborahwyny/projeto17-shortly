@@ -82,8 +82,49 @@ export async function openUrl(req, res){
 
 export async function deleteUrl(req, res) {
 
+    const {id} = req.params
+
+    const { authorization } = req.headers;
+    const token = authorization?.replace('Bearer ', '');
+
+    if (!token) {return res.sendStatus(401)}
+
     try {
 
+
+        const checkToken = await db.query('SELECT * FROM user_tokens WHERE token = $1;', [token]);
+        console.log("oi1", checkToken.rows[0])
+
+        if (checkToken.rows.length === 0) {
+            return res.status(401).send("Token inválido");
+        }
+        console.log("checkToken.rows[0]", checkToken.rows[0]);
+
+
+        console.log("oi2", checkToken.rows[0])
+
+
+        const userId = checkToken.rows[0].user_id
+        console.log("checkToken.rows[0]", checkToken.rows[0]);
+
+
+
+
+        const urlEntry = await db.query('SELECT * FROM url WHERE id = $1 AND user_id = $2;', [id, userId]);
+        console.log("oi4,5", urlEntry.rows[0])
+
+     
+        if (urlEntry.rowCount === 0) {
+            return res.sendStatus(404)
+        }
+        console.log("oi4", urlEntry.rows[0])
+
+
+        await db.query('DELETE FROM url WHERE id= $1;', [id]);
+
+
+
+        return res.sendStatus(204)
     } catch (err) {
         res.status(500).send(err.message)
     }
