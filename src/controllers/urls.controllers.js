@@ -146,8 +146,41 @@ export async function usersMe(req, res) {
             return res.status(401).send("Token inválido")
         }
 
+        const verificarUsuario = await db.query('SELECT * FROM users WHERE id= $1;', [verificadorToken.rows[0].user_id])
+        if(!verificarUsuario) res.status(401).send("usuario inválido")
 
-        return res.sendStatus(200)
+        const verificadorUrl = await db.query('SELECT * FROM url WHERE user_id = $1;', [verificarUsuario.rows[0].id])
+        console.log("a", verificadorUrl.rows)
+
+        const visitas = await db.query(`SELECT SUM(url.visitcount) FROM url WHERE user_id = $1;`, [verificarUsuario.rows[0].id])
+        console.log("b", visitas.rows)
+
+
+
+        const body = verificadorUrl.rows.map((url) => {
+            return {
+              
+            visitCount: url.visitcount,
+            id: url.id,
+            shortUrl: url.shortUrl,
+            url: url.url
+            }
+          })
+
+
+        const obj = {
+            id: verificarUsuario.rows[0].id,
+            name: verificarUsuario.rows[0].name,
+            visitCount: visitas.rows[0].sum,
+            shortenedUrls: body
+
+        } 
+
+
+        console.log("oi", visitas.rows)
+
+
+        return res.status(200).send(obj)
 
 
     } catch (err){
