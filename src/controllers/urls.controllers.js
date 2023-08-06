@@ -25,7 +25,7 @@ export async function urlShorten(req, res){
         const user_id = verificardorUser.rows[0].user_id
 
 
-        const urlShort = await db.query('INSERT INTO url (user_id, shortUrl, url) VALUES ($1, $2, $3);', [user_id, shortUrl, url])
+        const urlShort = await db.query('INSERT INTO url (user_id, shortUrl, url, visitCount) VALUES ($1, $2, $3, $4);', [user_id, shortUrl, url, 0])
 
         res.status(201).send(shortUrl)
 
@@ -68,7 +68,7 @@ export async function openUrl(req, res){
 
         const originalURL = verificarUrl.rows[0].url
 
-        await db.query('UPDATE url SET visitcount = visitcount + 1 WHERE shortUrl = $1;', [shortUrl]);
+        await db.query('UPDATE url SET visitcount = visitcount + 1 WHERE shortUrl= $1;', [shortUrl]);
 
         res.redirect(originalURL)
 
@@ -127,5 +127,31 @@ export async function deleteUrl(req, res) {
         return res.sendStatus(204)
     } catch (err) {
         res.status(500).send(err.message)
+    }
+}
+
+
+export async function usersMe(req, res) {
+
+    const { authorization } = req.headers;
+    const token = authorization?.replace('Bearer ', '');
+
+    if (!token) {return res.sendStatus(401)}
+
+    try {
+
+        const verificadorToken = await db.query('SELECT * FROM user_tokens WHERE token = $1;', [token])
+
+        if (verificadorToken.rows.length === 0) {
+            return res.status(401).send("Token inválido")
+        }
+
+
+        return res.sendStatus(200)
+
+
+    } catch (err){
+        res.status(500).send(err.message)
+
     }
 }
