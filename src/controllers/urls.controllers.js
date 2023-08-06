@@ -171,7 +171,7 @@ export async function usersMe(req, res) {
         const obj = {
             id: verificarUsuario.rows[0].id,
             name: verificarUsuario.rows[0].name,
-            visitCount: visitas.rows[0].sum,
+            linksCount: visitas.rows[0].sum,
             shortenedUrls: body
 
         } 
@@ -184,6 +184,34 @@ export async function usersMe(req, res) {
 
 
     } catch (err){
+        res.status(500).send(err.message)
+
+    }
+}
+
+export async function ranking(req, res) {
+
+    try {
+
+
+        const ranking = await db.query(`SELECT users.id, users.name,
+  COUNT(url.id) as "linksCount", COALESCE(SUM(url.visitcount), 0) as "visitCount"
+  FROM users LEFT JOIN url ON url.user_id = users.id
+  GROUP BY users.id
+  ORDER BY "visitCount" DESC
+  LIMIT 10`)
+
+  const obj = ranking.rows.map((a) => ({
+    id: a.id,
+    name: a.name,
+    linksCount: a.visitCount,
+    visitCount: a.visitCount
+}));
+
+        return res.status(200).send(obj)
+
+
+    } catch(err) {
         res.status(500).send(err.message)
 
     }
