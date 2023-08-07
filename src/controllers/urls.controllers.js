@@ -27,7 +27,7 @@ export async function urlShorten(req, res){
 
         const urlShort = await db.query('INSERT INTO url (user_id, shortUrl, url, visitCount) VALUES ($1, $2, $3, $4);', [user_id, shortUrl, url, 0])
 
-        res.status(201).send({shortUrl})
+        res.status(201).send({ "id": urlShort.rows[0].id, "shortUrl": shortUrl })
 
     } catch (err){
         res.status(500).send(err.message)
