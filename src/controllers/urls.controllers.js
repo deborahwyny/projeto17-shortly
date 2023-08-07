@@ -57,7 +57,7 @@ export async function getUrlId(req, res) {
             return res.status(404).send("URL não existe");
         }
 
-          res.status(200).send(getUrl.rows)
+          res.status(200).send(getUrl.rows[0])
 
 
     } catch (err) {
