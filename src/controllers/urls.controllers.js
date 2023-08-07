@@ -119,8 +119,9 @@ export async function deleteUrl(req, res) {
 
 
         if (urlEntry.rowCount === 0) {
-            return res.sendStatus(401)
+            return res.sendStatus(404)
         }
+
         console.log("oi4", urlEntry.rows[0])
 
 
@@ -165,10 +166,10 @@ export async function usersMe(req, res) {
         const body = verificadorUrl.rows.map((url) => {
             return {
               
-            visitCount: url.visitcount,
             id: url.id,
-            shortUrl: url.shortUrl,
-            url: url.url
+                shortUrl: url.shorturl,
+                url: url.url,
+                visitCount: url.visitcount
             }
           })
 
@@ -176,7 +177,7 @@ export async function usersMe(req, res) {
         const obj = {
             id: verificarUsuario.rows[0].id,
             name: verificarUsuario.rows[0].name,
-            linksCount: visitas.rows[0].sum,
+            visitCount: totalVisitCount,
             shortenedUrls: body
 
         } 
