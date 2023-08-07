@@ -42,7 +42,7 @@ export async function loginUser (req, res){
 
         const login = await db.query('INSERT INTO user_tokens (user_id, token) VALUES ($1, $2);', [user.id, token])
 
-        res.status(200).send(token);
+        res.status(200).send({token});
 
     } catch(err) {        
         res.status(500).send(err.message)
