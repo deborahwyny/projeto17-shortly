@@ -23,11 +23,23 @@ export async function urlShorten(req, res){
         }
 
         const user_id = verificardorUser.rows[0].user_id
+        console.log("oi 3", user_id )
+
 
 
         const urlShort = await db.query('INSERT INTO url (user_id, shortUrl, url, visitCount) VALUES ($1, $2, $3, $4);', [user_id, shortUrl, url, 0])
 
-        res.status(201).send({ "id": urlShort.rows[0].id, "shortUrl": shortUrl })
+
+
+        console.log("oi ", urlShort)
+        const response = {
+        id: user_id,
+        shortUrl: shortUrl,
+    };
+        console.log("oi2", response)
+
+
+        res.status(201).send(response)
 
     } catch (err){
         res.status(500).send(err.message)
