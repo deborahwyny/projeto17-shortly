@@ -52,7 +52,7 @@ export async function getUrlId(req, res) {
     const {id} = req.params
     try {
 
-        const getUrl = await db.query('SELECT id, "shorturl", url FROM url WHERE id = $1;', [id]);
+        const getUrl = await db.query('SELECT id, "shorturl" as "shortUrl", url FROM url WHERE id = $1;', [id]);
         if (getUrl.rowCount === 0) {
             return res.status(404).send("URL não existe");
         }
