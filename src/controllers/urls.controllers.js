@@ -121,7 +121,7 @@ export async function deleteUrl(req, res) {
         if (urlEntry.rowCount === 0) {
             return res.sendStatus(404)
         }
-
+        
         console.log("oi4", urlEntry.rows[0])
 
 
@@ -167,9 +167,9 @@ export async function usersMe(req, res) {
             return {
               
             id: url.id,
-                shortUrl: url.shorturl,
-                url: url.url,
-                visitCount: url.visitcount
+            shortUrl: url.shortUrl,
+            url: url.url,
+            visitCount: url.visitcount,
             }
           })
 
@@ -177,7 +177,7 @@ export async function usersMe(req, res) {
         const obj = {
             id: verificarUsuario.rows[0].id,
             name: verificarUsuario.rows[0].name,
-            visitCount: totalVisitCount,
+            linksCount: visitas.rows[0].sum,
             shortenedUrls: body
 
         } 
